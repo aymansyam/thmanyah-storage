@@ -8,18 +8,16 @@ enableVPA: true
 hpa:
   minReplicas: 3
   maxReplicas: 10
-
-  # Built-in resource metrics (toggle on/off)
   metrics:
     cpu:
       enabled: true
       targetAverageUtilization: 70
+    memory:
+      enabled: false
 
 vpa:
   updateMode: "Initial"
-  minAllowed:
-    cpu: "50m"
-    memory: "64Mi"
-  maxAllowed:
-    cpu: "2"
-    memory: "2Gi"
+  # Only control memory to avoid HPA/CPU loop
+  controlledResources: ["memory"]
+  minAllowed: { memory: "128Mi" }
+  maxAllowed: { memory: "2Gi" }
