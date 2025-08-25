@@ -35,6 +35,10 @@ runs:
       run: |
         echo "REPO_NAME=$(echo ${{ github.repository }} | sed 's/[^/]*\///' | sed 's/[^a-zA-Z0-9-]/-/g' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
+    - name: Set up DOCKER_IMAGE_NAME
+      shell: bash
+      run: echo "DOCKER_IMAGE_NAME=${{ env.REPO_NAME }}" >> $GITHUB_ENV
+
     - name: Set up GCP Authentication
       shell: bash
       env:
