@@ -31,7 +31,7 @@ jobs:
 
       - name: Define variables
         run: |
-          echo "DOCKER_REMOTE_URL=${{ env.REGION_NAME }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.DOCKER_IMAGE_NAME }}/${{ env.DOCKER_IMAGE_NAME }}"
+          echo "DOCKER_REMOTE_URL=${{ env.REGION_NAME }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.DOCKER_IMAGE_NAME }}/${{ env.DOCKER_IMAGE_NAME }}" >> $GITHUB_ENV
 
       - name: Setup GCP Authentication & Initialize Terraform
         uses: ./.github/actions/setup-gcp-authentication
