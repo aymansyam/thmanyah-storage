@@ -1,3 +1,8 @@
+{{- if .Values.enableVPA }}
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: {{ printf "%s-vpa" (required "values.appName must be set" .Values.appName) }}
 spec:
   targetRef:
     apiVersion: apps/v1
@@ -5,12 +10,19 @@ spec:
     name: {{ .Values.appName }}
   updatePolicy:
     updateMode: {{ .Values.vpa.updateMode | quote }}
+  {{- with .Values.vpa.controlledResources }}
   controlledResources:
-    {{- toYaml .Values.vpa.controlledResources | nindent 2 }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   resourcePolicy:
     containerPolicies:
       - containerName: {{ .Values.appName }}
+        {{- with .Values.vpa.minAllowed }}
         minAllowed:
-          {{- if .Values.vpa.minAllowed.memory }} memory: {{ .Values.vpa.minAllowed.memory | quote }} {{- end }}
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.vpa.maxAllowed }}
         maxAllowed:
-          {{- if .Values.vpa.maxAllowed.memory }} memory: {{ .Values.vpa.maxAllowed.memory | quote }} {{- end }}
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+{{- end }}
