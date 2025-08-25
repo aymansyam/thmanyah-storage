@@ -1,9 +1,16 @@
-appName: "thmanyah-store"
+# ----- Inserted Dynamically via CI/CD --------
+appName: "app-name"
 image: ""
-port: 8082
+# ---------------------------------------------
 
+port: 8082
 enableHPA: true
 enableVPA: true
+enableNetworkPolicy: true
+networkPolicy:
+  allowedNamespaces:
+    - thmanyah-backend
+  allowSameNamespace: true
 
 hpa:
   minReplicas: 3

@@ -2,18 +2,26 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: {{ .Values.appName }}-np
+  name: {{ required "values.appName must be set" .Values.appName }}-np
 spec:
   podSelector:
     matchLabels:
-      app: {{ .Values.appName }}
-  policyTypes: [Ingress]
+      app: {{ required "values.appName must be set" .Values.appName }}
+  policyTypes:
+    - Ingress
   ingress:
     - from:
+        {{- range $ns := .Values.networkPolicy.allowedNamespaces }}
         - namespaceSelector:
             matchLabels:
-              kubernetes.io/metadata.name: thmanyah-backend
+              kubernetes.io/metadata.name: {{ $ns | quote }}
+        {{- end }}
+        {{- if .Values.networkPolicy.allowSameNamespace }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace | quote }}
+        {{- end }}
       ports:
-        - port: {{ .Values.port | int }}
+        - port: {{ required "values.port must be set" .Values.port | int }}
           protocol: TCP
 {{- end }}
