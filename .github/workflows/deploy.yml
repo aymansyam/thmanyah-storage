@@ -138,5 +138,5 @@ jobs:
         run: |
           helm upgrade --install $service_name ./helm \
             --namespace $service_name \
-            --set namespace=$service_name \
+            --set appName=$service_name \
             --set image=$IMAGE \

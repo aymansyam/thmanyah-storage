@@ -2,13 +2,12 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: storage
-  namespace: {{ .Values.namespace }}
+  name: {{ printf "%s-hpa" (required "values.appName must be set" .Values.appName) }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: storage
+    name: {{ .Values.appName }}
   minReplicas: {{ .Values.minReplicas }}
   maxReplicas: {{ .Values.maxReplicas }}
   metrics:
@@ -18,10 +17,4 @@ spec:
         target:
           type: Utilization
           averageUtilization: {{ .Values.hpaTargetCPUUtilization }}
-    - type: Resource
-      resource:
-        name: memory
-        target:
-          type: Utilization
-          averageUtilization: {{ .Values.hpaTargetMemoryUtilization }}
 {{- end }}

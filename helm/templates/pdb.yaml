@@ -1,12 +1,9 @@
-{{- if .Values.pdb.enabled }}
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: storage
-  namespace: {{ .Values.namespace }}
+  name: {{ printf "%s-pdb" (required "values.appName must be set" .Values.appName) }}
 spec:
-  minAvailable: {{ .Values.pdb.minAvailable }}
+  minAvailable: 1
   selector:
     matchLabels:
-      app: storage
-{{- end }}
+      app: {{ .Values.appName }}

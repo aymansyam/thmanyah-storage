@@ -1,35 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: storage
-  namespace: {{ .Values.namespace }}
+  name: {{ required "values.appName must be set" .Values.appName }}
+labels:
+  app: {{ .Values.appName }}
 spec:
-  replicas: {{ .Values.replicas }}
+  replicas: 3
   selector:
     matchLabels:
-      app: storage
+      app: {{ .Values.appName }}
   template:
     metadata:
       labels:
-        app: storage
+        app: {{ .Values.appName }}
     spec:
       containers:
-        - name: storage
+        - name: {{ .Values.appName }}
           image: {{ required "values.image must be set" .Values.image }}
           ports:
-            - containerPort: {{ .Values.port }}
-              name: http
-          readinessProbe:
-            httpGet:
-              path: /healthz
-              port: http
-            initialDelaySeconds: 2
-            periodSeconds: 5
-          livenessProbe:
-            httpGet:
-              path: /healthz
-              port: http
-            initialDelaySeconds: 5
-            periodSeconds: 10
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            - containerPort: {{ required "values.port must be set" .Values.port | int }}
