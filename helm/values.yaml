@@ -12,8 +12,6 @@ hpa:
     cpu:
       enabled: true
       targetAverageUtilization: 70
-    memory:
-      enabled: false
 
 vpa:
   updateMode: "Initial"
