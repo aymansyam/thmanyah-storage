@@ -100,7 +100,7 @@ jobs:
       - name: Set variables
         run: |
           echo "REPO_NAME=$(echo ${{ github.repository }} | sed 's/[^/]*\///' | sed 's/[^a-zA-Z0-9-]/-/g' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
-          echo "DOCKER_REMOTE_URL=${{ env.REGION_NAME }}-docker.pkg.dev/${{ env.PROJECT_ID }}/$REPO_NAME/$REPO_NAME" >> $GITHUB_ENV
+          echo "DOCKER_REMOTE_URL=${{ env.REGION_NAME }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO_NAME }}/${{ env.REPO_NAME }}" >> $GITHUB_ENV
           echo "service_name=${{ github.event.client_payload.service_name }}" >> $GITHUB_ENV
           echo "IMAGE=${{ env.DOCKER_REMOTE_URL }}:latest" >> $GITHUB_ENV
 
