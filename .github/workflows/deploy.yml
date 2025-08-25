@@ -94,9 +94,9 @@ jobs:
 
       - name: Set variables
         run: |
-          echo "CLIENT_ID=${{ github.event.client_payload.client_id }}" >> $GITHUB_ENV
-          echo "AR_IMAGE=${{ env.REGION_NAME }}-docker.pkg.dev/${{ env.PROJECT_ID }}/nlu-api-ar-${{ github.event.client_payload.client_id }}/nlu-api-ar-${{ github.event.client_payload.client_id }}:latest" >> $GITHUB_ENV
-          echo "EN_IMAGE=${{ env.REGION_NAME }}-docker.pkg.dev/${{ env.PROJECT_ID }}/nlu-api-en-${{ github.event.client_payload.client_id }}/nlu-api-en-${{ github.event.client_payload.client_id }}:latest" >> $GITHUB_ENV
+          echo "service_name=${{ github.event.client_payload.service_name }}" >> $GITHUB_ENV
+          echo "AR_IMAGE=${{ env.REGION_NAME }}-docker.pkg.dev/${{ env.PROJECT_ID }}/nlu-api-ar-${{ github.event.client_payload.service_name }}/nlu-api-ar-${{ github.event.client_payload.service_name }}:latest" >> $GITHUB_ENV
+          echo "EN_IMAGE=${{ env.REGION_NAME }}-docker.pkg.dev/${{ env.PROJECT_ID }}/nlu-api-en-${{ github.event.client_payload.service_name }}/nlu-api-en-${{ github.event.client_payload.service_name }}:latest" >> $GITHUB_ENV
 
       - name: Setup GCP Auth
         uses: google-github-actions/auth@v2
@@ -121,15 +121,15 @@ jobs:
 
       - name: Create namespace if needed
         run: |
-          kubectl get namespace "$CLIENT_ID" >/dev/null 2>&1 || \
-          kubectl create namespace "$CLIENT_ID"
+          kubectl get namespace "$service_name" >/dev/null 2>&1 || \
+          kubectl create namespace "$service_name"
           
-          kubectl label namespace "$CLIENT_ID" managed-by=bab-leap-nlu-deployer --overwrite
+          kubectl label namespace "$service_name" managed-by=bab-leap-nlu-deployer --overwrite
           
       - name: Deploy with Helm
         run: |
-          helm upgrade --install $CLIENT_ID ./nlu-helm-chart \
-            --namespace $CLIENT_ID \
-            --set namespace=$CLIENT_ID \
+          helm upgrade --install $service_name ./nlu-helm-chart \
+            --namespace $service_name \
+            --set namespace=$service_name \
             --set arImage=$AR_IMAGE \
             --set enImage=$EN_IMAGE
