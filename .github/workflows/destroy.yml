@@ -7,7 +7,7 @@ on:
 
 env:
   PROJECT_ID: thmanyah-task
-  REGION_NAME: me-central1
+  REGION_NAME: europe-west1
   MAX_INSTANCES: 5
 
 jobs:
