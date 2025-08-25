@@ -1,6 +1,6 @@
 namespace: service-a
 image: "" 
-port: ""
+port: 8082
 enableVPA: true
 enableHPA: true
 
