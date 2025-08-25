@@ -1,0 +1,19 @@
+{{- if .Values.enableNetworkPolicy }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Values.appName }}-np
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ .Values.appName }}
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: thmanyah-backend
+      ports:
+        - port: {{ .Values.port | int }}
+          protocol: TCP
+{{- end }}
