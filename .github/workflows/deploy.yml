@@ -29,10 +29,6 @@ jobs:
           TF_SECRETS=$(echo '${{ toJSON(secrets) }}' | jq -c 'if . == null then {} else . end | with_entries(.)')
           echo "TF_VAR_dynamic_env_secrets=${TF_SECRETS}" >> $GITHUB_ENV
 
-      - name: Define variables
-        run: |
-          echo "DOCKER_REMOTE_URL=${{ env.REGION_NAME }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.DOCKER_IMAGE_NAME }}/${{ env.DOCKER_IMAGE_NAME }}" >> $GITHUB_ENV
-
       - name: Setup GCP Authentication & Initialize Terraform
         uses: ./.github/actions/setup-gcp-authentication
         with:
@@ -40,6 +36,10 @@ jobs:
           region-name: ${{ env.REGION_NAME }}
           gcp-sa-key: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY_FILE }}
           bucket-name: tf-state-${{ github.event.client_payload.service_name }}
+
+      - name: Define variables
+        run: |
+          echo "DOCKER_REMOTE_URL=${{ env.REGION_NAME }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.DOCKER_IMAGE_NAME }}/${{ env.DOCKER_IMAGE_NAME }}" >> $GITHUB_ENV
 
       - name: Build and tag Docker image
         run: |
