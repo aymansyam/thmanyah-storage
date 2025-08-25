@@ -1,0 +1,30 @@
+namespace: service-a
+image: "" 
+port: ""
+enableVPA: true
+enableHPA: true
+
+replicas: 3
+minReplicas: 2
+maxReplicas: 10
+hpaTargetCPUUtilization: 70
+hpaTargetMemoryUtilization: 80
+
+resources:
+  requests:
+    cpu: "100m"
+    memory: "128Mi"
+  limits:
+    cpu: "500m"
+    memory: "512Mi"
+
+service:
+  type: ClusterIP
+  port: 80
+  annotations: {}
+
+pdb:
+  enabled: true
+  minAvailable: 1
+
+podAnnotations: {}
