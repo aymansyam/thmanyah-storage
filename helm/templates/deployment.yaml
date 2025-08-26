@@ -19,23 +19,21 @@ spec:
           image: {{ required "values.image must be set" .Values.image }}
           ports:
             - containerPort: {{ required "values.port must be set" .Values.port | int }}
-
           readinessProbe:
             httpGet:
-              path: {{ default "/healthz" .Values.readinessProbe.path }}
+              path: {{ default "/healthz" (default dict .Values.readinessProbe).path }}
               port: {{ .Values.port | int }}
-            initialDelaySeconds: {{ default 2  .Values.readinessProbe.initialDelaySeconds }}
-            periodSeconds:       {{ default 5  .Values.readinessProbe.periodSeconds }}
-            timeoutSeconds:      {{ default 1  .Values.readinessProbe.timeoutSeconds }}
-            successThreshold:    {{ default 1  .Values.readinessProbe.successThreshold }}
-            failureThreshold:    {{ default 3  .Values.readinessProbe.failureThreshold }}
+            initialDelaySeconds: {{ default 2 ((default dict .Values.readinessProbe).initialDelaySeconds) }}
+            periodSeconds: {{ default 5 ((default dict .Values.readinessProbe).periodSeconds) }}
+            timeoutSeconds: {{ default 1 ((default dict .Values.readinessProbe).timeoutSeconds) }}
+            successThreshold: {{ default 1 ((default dict .Values.readinessProbe).successThreshold) }}
+            failureThreshold: {{ default 3 ((default dict .Values.readinessProbe).failureThreshold) }}
 
-          # Liveness: same endpoint, but more tolerant to let Pod be NotReady first
           livenessProbe:
             httpGet:
-              path: {{ default (default "/healthz" .Values.readinessProbe.path) .Values.livenessProbe.path }}
+              path: {{ default "/healthz" (default (default dict .Values.livenessProbe).path ((default dict .Values.readinessProbe).path)) }}
               port: {{ .Values.port | int }}
-            initialDelaySeconds: {{ default 5  .Values.livenessProbe.initialDelaySeconds }}
-            periodSeconds:       {{ default 5  .Values.livenessProbe.periodSeconds }}
-            timeoutSeconds:      {{ default 1  .Values.livenessProbe.timeoutSeconds }}
-            failureThreshold:    {{ default 6  .Values.livenessProbe.failureThreshold }}
+            initialDelaySeconds: {{ default 5 ((default dict .Values.livenessProbe).initialDelaySeconds) }}
+            periodSeconds: {{ default 5 ((default dict .Values.livenessProbe).periodSeconds) }}
+            timeoutSeconds: {{ default 1 ((default dict .Values.livenessProbe).timeoutSeconds) }}
+            failureThreshold: {{ default 6 ((default dict .Values.livenessProbe).failureThreshold) }}
